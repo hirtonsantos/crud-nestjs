@@ -40,17 +40,18 @@ export class UsersService {
 
   update(newUser: any, id: number) {
     const user = this.users.findIndex((user) => user.id === id);
-    if (!(user > 0)) {
+    if (user === -1) {
       throw new NotFoundException();
     }
+    newUser.id = this.users[user].id;
     this.users[user] = newUser;
   }
 
   delete(id: number) {
     const user = this.users.findIndex((user) => user.id === id);
-    if (!(user > 0)) {
+    if (user === -1) {
       throw new NotFoundException();
     }
-    this.users.slice(user, 1);
+    this.users.splice(user, 1);
   }
 }

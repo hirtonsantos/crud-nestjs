@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto.ts';
 
 export interface User {
-  name: string;
-  email: string;
-  id: number;
+  name?: string;
+  email?: string;
+  id?: number;
 }
 
 @Injectable()
@@ -16,7 +17,7 @@ export class UsersService {
     },
   ];
 
-  create(user: User) {
+  create(user: CreateUserDto) {
     const lastUser = this.users.slice(-1)[0];
     if (!lastUser) {
       user.id = 0;

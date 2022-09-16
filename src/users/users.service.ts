@@ -1,58 +1,37 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto.ts';
-
-export interface User {
-  name?: string;
-  email?: string;
-  id?: number;
-}
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './entity/users.entity';
 
 @Injectable()
 export class UsersService {
-  private readonly users: User[] = [
-    {
-      name: 'hirton silva',
-      email: 'hirtonsilva@gmail.com',
-      id: 1,
-    },
-  ];
+  constructor(
+    @InjectRepository(User) private usersRepository: Repository<User>,
+  ) {}
 
-  create(user: CreateUserDto) {
-    const lastUser = this.users.slice(-1)[0];
-    if (!lastUser) {
-      user.id = 0;
-    } else {
-      user.id = lastUser.id + 1;
-    }
-    this.users.push(user);
+  async create(data) {
+    const newUser = Object.assign(new User(), data);
+    this.usersRepository.create(newUser);
+    await this.usersRepository.save(newUser);
   }
 
-  findAll(): User[] {
-    return this.users;
+  findAll(): Promise<User[]> {
+    return this.usersRepository.find();
   }
 
-  findOne(id: number) {
-    const user = this.users.find((user) => user.id === id);
-    if (!user) {
-      throw new NotFoundException();
-    }
-    return user;
+  findOne(id: string): Promise<User> {
+    return this.usersRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
   }
 
-  update(newUser: any, id: number) {
-    const user = this.users.findIndex((user) => user.id === id);
-    if (user === -1) {
-      throw new NotFoundException();
-    }
-    newUser.id = this.users[user].id;
-    this.users[user] = newUser;
+  async update(newUser: any, id: string) {
+    await this.usersRepository.update(id, { ...newUser });
   }
 
-  delete(id: number) {
-    const user = this.users.findIndex((user) => user.id === id);
-    if (user === -1) {
-      throw new NotFoundException();
-    }
-    this.users.splice(user, 1);
+  async delete(id: string): Promise<void> {
+    this.usersRepository.delete(id);
   }
 }

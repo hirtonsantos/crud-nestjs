@@ -3,7 +3,11 @@ import { IsEmail, IsString } from 'class-validator';
 export class CreateUserDto {
   @IsString()
   name?: string;
+
   @IsEmail()
   email?: string;
-  id?: number;
+
+  id?: string;
+
+  socialMedias?: string[];
 }

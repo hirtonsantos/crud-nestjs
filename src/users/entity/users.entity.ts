@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn } from 'typeorm';
 import { v4 as uuid } from 'uuid';
+import { SocialMedia } from './socialMidia.entity';
 
 @Entity({
   name: 'user',
@@ -16,11 +17,19 @@ export class User {
   @Column({
     type: 'varchar',
   })
-  name: string;
+  username: string;
 
   @Column({
     type: 'varchar',
     length: 200,
   })
   email: string;
+
+  @JoinTable({
+    name: 'users_socialMedia',
+  })
+  @ManyToMany(() => SocialMedia, (socialMedia) => socialMedia.users, {
+    cascade: true,
+  })
+  socialMedias: SocialMedia[];
 }

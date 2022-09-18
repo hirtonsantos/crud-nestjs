@@ -17,8 +17,8 @@ const defaultOptions = {
   imports: [
     TypeOrmModule.forRoot({
       ...defaultOptions,
-      synchronize: true,
-      autoLoadEntities: true,
+      synchronize: false,
+      autoLoadEntities: false,
     }),
     usersModule,
   ],

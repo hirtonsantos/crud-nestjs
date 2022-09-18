@@ -28,8 +28,6 @@ export class User {
   @JoinTable({
     name: 'users_socialMedia',
   })
-  @ManyToMany(() => SocialMedia, (socialMedia) => socialMedia.users, {
-    cascade: true,
-  })
+  @ManyToMany(() => SocialMedia, (socialMedia) => socialMedia.users)
   socialMedias: SocialMedia[];
 }
